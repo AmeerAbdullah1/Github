@@ -1,44 +1,72 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Text } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import ApiTest from "./ApiTest";
 
-
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { loading, error, fetchData } = useFetch();
+  const navigation = useNavigation();
+
+  const handleEmailChange = (text) => {
+    setEmail(text);
+  };
+
+  const handlePasswordChange = (text) => {
+    setPassword(text);
+  };
+
+  const handleButtonPress = () => {
+    navigation.navigate('SignUp');
+  };
 
   const handleLogin = async () => {
-    // const data = await fetchData('YOUR_LOGIN_API_ENDPOINT', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({ email, password }),
-    // });
-
-    // // handle login response
-    // console.log('Login response:', data);
-     // If login is successful, navigate to another screen
-    // navigation.navigate('Home');
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      console.log('User logged in successfully:', user);
+      // Navigate to Home Screen or authenticated area
+    } catch (error) {
+      console.error('Error logging in:', error);
+      Alert.alert('Error', error.message);
+      // Handle error
+    }
   };
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
-      <Button title="Login" onPress={handleLogin} disabled={loading} />
-      {error && <Text style={styles.error}>{error}</Text>}
+   
+      <Image source={require('./assets/pic.png')} style={styles.image} />
+
+      <Text style={styles.title}>Login Screen</Text>
+
+      <View style={styles.textInputContainer}>
+        <TextInput
+          value={email}
+          onChangeText={handleEmailChange}
+          style={styles.textInput}
+          placeholder="Email"
+        />
+        <TextInput
+          value={password}
+          onChangeText={handlePasswordChange}
+          style={styles.textInput}
+          placeholder="Password"
+          secureTextEntry
+        />
+      </View>
+     
+
+      <TouchableOpacity onPress={handleLogin} style={styles.button}>
+        <Text style={styles.buttonText}>Login</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={handleButtonPress} style={styles.button}>
+        <Text style={styles.buttonText}>Go to Sign Up</Text>
+      </TouchableOpacity>
+       {/* Render ApiTest component */}
+     
     </View>
   );
 };
@@ -48,20 +76,42 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 20,
   },
-  input: {
-    width: '100%',
-    padding: 10,
+  title: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  image: {
+    width: 250,
+    height: 150,
+    marginBottom: 20,
+  },
+  textInputContainer: {},
+  textInput: {
+    height: 50,
+    width: 300,
+    borderColor: 'red',
+    borderWidth: 2.5,
+    borderRadius: 23,
+    paddingHorizontal: 35,
     marginBottom: 10,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
   },
-  error: {
-    color: 'red',
-    marginTop: 10,
+  button: {
+    height: 40,
+    width: 250,
+    borderRadius: 50,
+    backgroundColor: 'red',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
   },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+ 
 });
 
 export default LoginScreen;
