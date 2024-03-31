@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-
+import { auth } from './firebase';
 import { getAuth } from 'firebase/auth';
 
 const SignUpScreen = ({ navigation }) => {
@@ -80,7 +80,8 @@ const styles = StyleSheet.create({
   },
   button: {
     height: 50,
-    width: 150, borderRadius: 25,
+    width: 150,
+    borderRadius: 25,
     backgroundColor: 'red', // Button color
     justifyContent: 'center',
     alignItems: 'center',

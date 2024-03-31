@@ -1,8 +1,13 @@
+
+
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './LoginScreen';
-import SignUpScreen from './SignUpScreen'; // Corrected import statement
+import SignUpScreen from './SignUpScreen';
+import intro from "./intro";
+
+import { app, auth } from './firebase'; // Import app and auth from firebase
 
 const Stack = createStackNavigator();
 
@@ -16,6 +21,7 @@ const App = () => {
           component={SignUpScreen}
           initialParams={{ auth: auth }} // Pass the 'auth' object as initialParams
         />
+     
       </Stack.Navigator>
     </NavigationContainer>
   );
